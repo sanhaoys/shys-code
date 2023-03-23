@@ -171,4 +171,22 @@ console.log(1 + [2, 3, 4]) // 12,3,4
 
 ### this
 
-小册对this相关描述很差劲，参考js-go-deep的相关md
+小册对 this 相关描述很差劲，参考 js-go-deep 的相关 md
+
+### == 与 ===
+
+对于 == 来说，如果双方类型不一致，会进行类型转换
+
+1. 类型相同比大小
+2. 不相同就进行类型转换
+3. 判断是否是 undefined 和 null 比较，是的话就返回 true
+4. 判断比较双方是否是 string 和 number，是的话就将 string 转为 number
+5. 判断其中一方是否是 boolean，是的话就将 boolean 转为 number
+6. 判断其中一方是否是 object 且另一方为 string/number，是的话就将 object 转为原始类型(valueOf, toString)
+7. 返回 false
+
+=== 直接判断
+
+### 闭包
+
+参考 js-go-deep 的相关 md
