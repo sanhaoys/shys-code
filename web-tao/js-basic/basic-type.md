@@ -190,3 +190,17 @@ console.log(1 + [2, 3, 4]) // 12,3,4
 ### 闭包
 
 参考 js-go-deep 的相关 md
+
+### 深浅拷贝
+
+浅拷贝可以使用`Object.assign`或者展开运算符来解决，浅拷贝会对引用类型进行地址拷贝
+
+深拷贝可以使用`JSON.parse(JSON.stringify(obj))`解决，但是局限性是有循环引用会抛出错误，以及对 function、undefined、symbol 不支持(copy 后会消失)
+
+lodash.deep 深拷贝
+
+## 原型
+
+原型可以参考 js-deep 相关 md
+
+![原型链](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/208272cb722e403491b0cf3cb4f15797~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
