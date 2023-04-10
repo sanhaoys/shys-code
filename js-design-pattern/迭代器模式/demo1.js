@@ -1,12 +1,17 @@
 var each = function (arrLike, cb) {
   // 使用l保证arrLike的length在迭代过程中被修改之后行为不受影响
   for (var i = 0, l = arrLike.length; i < l; i++) {
-    cb.call(arrLike[i], arrLike[i], i)
+    if (cb.call(arrLike[i], arrLike[i], i) === false) {
+      break
+    }
   }
 }
 
 each([1, 2, 3], function (val, index) {
   console.log('arr[' + index + '] = ' + val)
+  if (val > 1) {
+    return false
+  }
 })
 
 // 同时比较两个数组
