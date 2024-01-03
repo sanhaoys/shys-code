@@ -265,3 +265,89 @@ border-image-slice: 20px fill;
 4. `space` 让图像保持原始尺寸 平铺时彼此保持等宽间距 若区域无法呈现至少一个源图像单元 则以空白显示(该属性兼容性差)
 
 ![栗子](http://s6cvy6sa6.hn-bkt.clouddn.com/image/2023/12/28/FFOLOO-FISJnz.png)
+
+## position 属性的增强
+
+### `sticky` 黏性定位
+
+在黏性定位之前要实现黏性效果 要通过使用 js 来将元素从 relative 和 fixed 直接切换 会被误解为黏性定位是相对定位和绝对定位的结合体
+实际上 黏性定位只是相对定位的延伸
+
+黏性定位和相对定位相似的地方
+
+1. 元素发生偏移时 原始位置是保留的
+2. 创建了新的绝对定位包含块(子元素的绝对定位相对于最近的绝对定位包含块)
+3. 支持设置`z-index`属性来改变元素的层叠顺序
+
+不同的地方
+
+1. 偏移计算元素不同 相对定位为父元素 而黏性定位为层级最近的滚动元素(of 不为 visible 的元素)若无可滚动元素 则相对浏览器视窗
+2. 偏移定位计算规则不同 黏性定位有专有的概念
+3. 重叠表现不同 同父元素覆盖 不同父元素表现像是推开
+
+### 黏性定位计算规则
+
+黏性定位有流盒(flow box)的概念 指的是距离元素最近的可滚动元素的尺寸盒子 如果没有可滚动元素 则表示浏览器视窗盒子
+黏性定位中还有一个名为`黏性约束矩形`的概念，指的是黏性定位元素的包含块(通常为父元素)在文档流中呈现的矩形区域和流盒的 4 个边缘在应用黏性定位元素的`left`、`top`、`right`和`bottom`属性的偏移计算后的新矩形的交集 由于滚动时流盒不变 而粘性定位的元素的包含块跟着滚动 因此黏性约束矩形随着滚动的进行
+
+如图所示
+
+![flSVzI-gMzuzA](http://s6cvy6sa6.hn-bkt.clouddn.com/image/2024/01/02/flSVzI-gMzuzA.png)
+
+滚动后
+
+![cuwOwv-tD9B4b](http://s6cvy6sa6.hn-bkt.clouddn.com/image/2024/01/02/cuwOwv-tD9B4b.png)
+
+要注意交集的概念
+
+**黏性定位的堆叠原则**
+
+会覆盖
+
+不同父元素的黏性定位为什么会有被推开的感觉
+因为父元素虽规定的黏性约束矩形不同 上一个黏性定位元素已经随着父元素滚动走了 看着就像被推开了一样
+
+## font-family 和@font-face 规则新特性
+
+### 通用字体族
+
+字体组表示一个系列字体 而并不单值某一个字体 字体族又分为普通字体族和通用字体组
+
+一些通用字体组(CSS Fonts Module Level 4)
+
+1. serif 衬线字体 笔画有粗有细 开始和结束带有装饰
+2. sans-serif 无衬线字体 画均匀粗细 没有额外装饰
+3. monospace 等宽字体
+4. fantasy 奇幻字体 用来装饰和表现效果
+5. system-ui 系统 UI 字体(注意兼容性)
+6. emoji 适用于 emoji 字符的字体家族
+   注意 需要将 emoji 放于其他字体之后(避免样式被修改)或者修改 emoji 的 unicode-range(决定字体作用与那些字符上)
+7. fangsong 仿宋字体族
+
+### `local()`函数与系统字体的调用
+
+`local()`函数可以调用系统安装的字体
+
+使用 local 有两个好处
+
+1. 简化字体调用
+
+   ```css
+   @font-face {
+     font-family: Mono;
+     src: local('Menlo'), local('monospace');
+   }
+
+   div {
+     font-family: Mono;
+   }
+   ```
+
+2. 在自定义字体的场景下提高性能
+   local 函数可以让安装了 fangsong 字体的用户无需额外发起请求
+   ```css
+   @font-face {
+     font-family: fangsong;
+     src: local('fangsong'), url('xxx.ttf') format('truetype');
+   }
+   ```
